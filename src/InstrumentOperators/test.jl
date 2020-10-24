@@ -1,17 +1,19 @@
+using DataInterpolations
+using NCDatasets
 
-oco = Dataset("/Users/cfranken/Downloads/oco2_L1bScND_18688a_180105_B8100r_180206190633.h5")
-ils = oco.group["InstrumentHeader"]["ils_relative_response"][:]
-ils_Δ = oco.group["InstrumentHeader"]["ils_delta_lambda"][:]
+ils_Δ, ils_in, dispersion = read_ils_table("/net/fluo/data2/oco2_L1bScND_18688a_180105_B8100r_180206190633.h5", "src/InstrumentOperators/json/ils_oco2.json");
+band = 1
+footprint = 1
+# Footprint and band index:
+extended_dims  = [footprint,band]
+dispPoly = Polynomial(view(dispersion, :, extended_dims...))
+ν = dispPoly.(0:1015)
+res = 0.001
+grid_x = Float32(-0.45 / 1e3):Float32(res / 1e3):Float32(0.45 / 1e3)
+ind_out = collect(1:1016);
+oco2_kernel = VariableKernelInstrument5(ils_pixel, wl, ind_out)
 
-# Views:
-band = 2
-footprint = 4
-ils2   = view(ils, :, :, footprint, band)
-ils2_Δ = view(ils_Δ, :, :, footprint, band)
-grid = -0.9 / 1e3:0.01 / 1e3:0.9 / 1e3;
-ils_pixel = zeros(Float32, length(collect(grid)), 1016);
+ν_mod = collect(Float32, 758:res:771)
+spectrum = zeros(Float32, length(ν_mod))
 
-for i = 1:1016
-    interp_linear = LinearInterpolation(ils2_Δ[:,i], ils2[:,i])
-    ils_pixel[:,i] = interp_linear(grid);
-end
+y_conv =  conv_spectra(oco2_kernel, ν_mod, spectrum)
