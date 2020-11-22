@@ -1,5 +1,6 @@
 using DataInterpolations
 using NCDatasets
+using Polynomials
 
 ils_Δ, ils_in, dispersion = read_ils_table("/net/fluo/data2/oco2_L1bScND_18688a_180105_B8100r_180206190633.h5", "src/InstrumentOperators/json/ils_oco2.json");
 band = 1
