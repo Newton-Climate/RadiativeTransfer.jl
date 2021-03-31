@@ -1,17 +1,17 @@
 "Elemental single-scattering layer"
 function elemental!(pol_type, SFI::Bool, 
-                            τ_sum::AbstractArray{FT,1}, #Suniti
-                            dτ_λ::AbstractArray{FT,1},  # dτ_λ: total optical depth of elemental layer (per λ)
-                            dτ::FT,                     # dτ:   scattering optical depth of elemental layer (scalar)
-                            ϖ_λ::AbstractArray{FT,1},   # ϖ: single scattering albedo of elemental layer (per λ, absorptions by gases included)
-                            ϖ::FT,                      # ϖ: single scattering albedo of elemental layer (no trace gas included)
-                            Z⁺⁺::AbstractArray{FT,2},   # Z matrix
-                            Z⁻⁺::AbstractArray{FT,2}, 
+                            τ_sum,#::AbstractArray{FT,1}, #Suniti
+                            dτ_λ,#::AbstractArray{FT,1},  # dτ_λ: total optical depth of elemental layer (per λ)
+                            dτ,#::FT,                     # dτ:   scattering optical depth of elemental layer (scalar)
+                            ϖ_λ,#::AbstractArray{FT,1},   # ϖ: single scattering albedo of elemental layer (per λ, absorptions by gases included)
+                            ϖ,#::FT,                      # ϖ: single scattering albedo of elemental layer (no trace gas included)
+                            Z⁺⁺,#::AbstractArray{FT,2},   # Z matrix
+                            Z⁻⁺,#::AbstractArray{FT,2}, 
                             m::Int,                     # m: fourier moment
                             ndoubl::Int,                # ndoubl: number of doubling computations needed 
                             scatter::Bool,              # scatter: flag indicating scattering
                             quadPoints::QuadPoints{FT}, # struct with quadrature points, weights, 
-                            added_layer::AddedLayer{FT}, 
+                            added_layer::AddedLayer, 
                             I_static,
                             architecture) where {FT}
     

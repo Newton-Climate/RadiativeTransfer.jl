@@ -43,13 +43,15 @@ devi(::CPU) = KernelAbstractions.CPU()
 devi(::GPU) = KernelAbstractions.CUDADevice()
 
          architecture(::Array)   = CPU()
+        #architecture(::CuArray) = GPU()
 @hascuda architecture(::CuArray) = GPU()
 
          array_type(::CPU) = Array
+         #array_type(::GPU) = CuArray
 @hascuda array_type(::GPU) = CuArray
 
 default_architecture = has_cuda() ? GPU() : CPU()
 
 synchronize_if_gpu() = has_cuda() ? synchronize() : nothing
-
+#synchronize_if_gpu() = synchronize()
 end

@@ -1,7 +1,7 @@
 # No scattering in either the added layer or the composite layer.
 function interaction_helper!(::ScatteringInterface_00, SFI,
-                                composite_layer::CompositeLayer{FT}, 
-                                added_layer::AddedLayer{FT}, 
+                                composite_layer::CompositeLayer,#{FT}, 
+                                added_layer::AddedLayer,#{FT}, 
                                 I_static::AbstractArray{FT}) where {FT}
 
     if SFI
@@ -19,8 +19,8 @@ end
 # Scattering in homogeneous layer, added to bottom of the composite layer.
 # Produces a new, scattering composite layer.
 function interaction_helper!(::ScatteringInterface_01, SFI,
-                                composite_layer::CompositeLayer{FT}, 
-                                added_layer::AddedLayer{FT}, 
+                                composite_layer::CompositeLayer,#{FT}, 
+                                added_layer::AddedLayer,#{FT}, 
                                 I_static::AbstractArray{FT}) where {FT}
 
     if SFI
@@ -41,8 +41,8 @@ end
 # added to the bottom of the composite layer.
 # Produces a new, scattering composite layer.
 function interaction_helper!(::ScatteringInterface_10, SFI,
-                                composite_layer::CompositeLayer{FT}, 
-                                added_layer::AddedLayer{FT}, 
+                                composite_layer::CompositeLayer,#{FT}, 
+                                added_layer::AddedLayer,#{FT}, 
                                 I_static::AbstractArray{FT}) where {FT}
 
     if SFI
@@ -61,8 +61,8 @@ end
 # Scattering in homogeneous layer which is added to the bottom of the composite layer.
 # Produces a new, scattering composite layer.
 function interaction_helper!(::ScatteringInterface_11, SFI,
-                                composite_layer::CompositeLayer{FT}, 
-                                added_layer::AddedLayer{FT}, 
+                                composite_layer::CompositeLayer,#{FT}, 
+                                added_layer::AddedLayer,#{FT}, 
                                 I_static::AbstractArray{FT}) where {FT}
     
     @unpack r⁺⁻, r⁻⁺, t⁻⁻, t⁺⁺ = added_layer
@@ -107,8 +107,8 @@ end
 
 
 function interaction!(scattering_interface::AbstractScatteringInterface, SFI,
-                        composite_layer::CompositeLayer{FT}, 
-                        added_layer::AddedLayer{FT},
+                        composite_layer::CompositeLayer,#{FT}, 
+                        added_layer::AddedLayer,#{FT},
                         I_static::AbstractArray{FT}) where {FT}
 
     interaction_helper!(scattering_interface, SFI, composite_layer, added_layer, I_static)

@@ -215,7 +215,7 @@ mutable struct vSmartMOM_Parameters{FT} #<: AbstractvSmartMOMModel
     "Number of aerosol species"
     nAer::Integer
     "AOD at Reference wavelength (`nAer`)"
-    τAer_ref::AbstractArray{FT} #Suniti
+    τAer_ref::AbstractArray#{FT} #Suniti
     "Log mean radius (`nAer`)"
     μ::AbstractArray{FT} #Suniti
     "Log stddev of radius (`nAer`)"
@@ -229,7 +229,7 @@ mutable struct vSmartMOM_Parameters{FT} #<: AbstractvSmartMOMModel
     "Imag part of refractive index (`nBand,nAer`)"
     nᵢ::AbstractArray{FT}
     "Pressure peak [Pa] (`nAer`)"
-    p₀::AbstractArray{FT}
+    p₀::AbstractArray #{FT}
     "Pressure peak width [Pa] (`nAer`)"
     σp::AbstractArray{FT}
     "Path to atmospheric profile file"

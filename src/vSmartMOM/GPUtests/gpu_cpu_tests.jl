@@ -18,9 +18,9 @@ if has_cuda_gpu()
 end
 
 # Needs some warning if memory is getting too large !
-FT = Float32
-n = 32
-nSpec  = 20000
+FT =  Float32
+n = 64
+nSpec  = 15000
 ndoubl = 5
 
 dims = (n,n)
@@ -28,8 +28,8 @@ pol_type  = Stokes_IQU{FT}()
 I_static  = Diagonal{FT}(ones(n));
 I_static_ = Diagonal(CuArray(Diagonal{FT}(ones(n))));
 
-SFI = true
-expk  = exp.(-randn(nSpec));
+SFI = false
+expk  = exp.(-randn(FT,nSpec));
 expk_ = CuArray(expk);
 
 added_layer_CPU     = vSmartMOM.make_added_layer_rand(FT, Array, dims, nSpec);

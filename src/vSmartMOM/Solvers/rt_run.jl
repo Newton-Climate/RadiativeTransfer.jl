@@ -37,11 +37,14 @@ function rt_run(pol_type,              # Polarization type (IQUV)
     print("Creating arrays")
     NquadN = Nquad * pol_type.n
     dims = (NquadN,NquadN)
-    @timeit "Creating layers" added_layer         = make_added_layer(FT, arr_type, dims, nSpec)
+    @show typeof(τAer[1])
+    println("Dimensions(n,n,nSpec) = (", NquadN,"," ,NquadN,"," ,nSpec,")")
+    #@show typeof()
+    @timeit "Creating layers" added_layer         = make_added_layer(typeof(τAer[1]), arr_type, dims, nSpec)
     # For surface:
-    @timeit "Creating layers" added_layer_surface = make_added_layer(FT, arr_type, dims, nSpec)
+    @timeit "Creating layers" added_layer_surface = make_added_layer(typeof(τAer[1]), arr_type, dims, nSpec)
     # For atmosphere+surface:
-    @timeit "Creating layers" composite_layer     = make_composite_layer(FT, arr_type, dims, nSpec)
+    @timeit "Creating layers" composite_layer     = make_composite_layer(typeof(τAer[1]), arr_type, dims, nSpec)
 
     # Compute aerosol Z-matrices for all aerosols
     nAer  = length(aerosol_optics)
@@ -67,7 +70,7 @@ function rt_run(pol_type,              # Polarization type (IQUV)
         #nAer, nBand = size(aerosol_optics)
         #@show nAer#, nBand
         
-        @show size(Rayl𝐙⁺⁺)
+        #@show size(Rayl𝐙⁺⁺)
 
         # Need to make sure arrays are 0:
         # TBD here
@@ -152,9 +155,9 @@ function rt_run(pol_type,              # Polarization type (IQUV)
         end 
 
         #surf = LambertianSurfaceScalar(0.5)
-        create_surface_layer!(brdf, added_layer, SFI, m, pol_type, quadPoints, τ_sum, architecture);
+        #create_surface_layer!(brdf, added_layer_surface, SFI, m, pol_type, quadPoints, τ_sum, architecture);
         #@show added_layer.J₀⁻[:,:,1]
-        @timeit "interaction" interaction!(scattering_interface, SFI, composite_layer, added_layer, I_static)
+        #@timeit "interaction" interaction!(scattering_interface, SFI, composite_layer, added_layer_surface, I_static)
 
         # All of this is "postprocessing" now, can move this into a separate function:
 
@@ -162,40 +165,17 @@ function rt_run(pol_type,              # Polarization type (IQUV)
         st_iμ0, istart0, iend0 = get_indices(iμ₀, pol_type);
 
         # Convert these to Arrays (if CuArrays), so they can be accessed by index
-        R⁻⁺ = Array(composite_layer.R⁻⁺)
-        T⁺⁺ = Array(composite_layer.T⁺⁺)
-        J₀⁺ = Array(composite_layer.J₀⁺)
-        J₀⁻ = Array(composite_layer.J₀⁻)
-        # Loop over all viewing zenith angles
-        for i = 1:length(vza)
-
-            # Find the nearest quadrature point idx
-            iμ = nearest_point(qp_μ, cosd(vza[i]));
-            st_iμ, istart, iend = get_indices(iμ, pol_type);
-            
-            # Compute bigCS
-            cos_m_phi, sin_m_phi = (cosd(m * vaz[i]), sind(m * vaz[i]));
-            bigCS = weight * Diagonal([cos_m_phi, cos_m_phi, sin_m_phi, sin_m_phi][1:pol_type.n]);
-
-            # Accumulate Fourier moments after azimuthal weighting
-            
-            for s = 1:nSpec
-                R[i,:,s] += bigCS * (R⁻⁺[istart:iend, istart0:iend0, s] / μ₀) * pol_type.I₀;
-                T[i,:,s] += bigCS * (T⁺⁺[istart:iend, istart0:iend0, s] / μ₀) * pol_type.I₀;
-                if SFI
-                    R_SFI[i,:,s] += bigCS * J₀⁻[istart:iend,1, s];
-                    T_SFI[i,:,s] += bigCS * J₀⁺[istart:iend,1, s];
-                end
-                #@show(m,R[i,1,s], R_SFI[i,1,s])
-            end
-            
-        end
+        #R⁻⁺ = Array(composite_layer.R⁻⁺)
+        #T⁺⁺ = Array(composite_layer.T⁺⁺)
+        #@show composite_layer.J₀⁻[1,1,1]
+        
+        
     end
-
+    
     print_timer()
     reset_timer!()
-
-    return R, T, R_SFI, T_SFI  
+    return composite_layer.J₀⁻[3,1,:]
+    #return R, T, R_SFI, T_SFI;  
 end
 
 function rt_run(model::vSmartMOM_Model)

@@ -304,7 +304,7 @@ function model_from_parameters(params::vSmartMOM_Parameters)
     aerosol_optics = [Array{AerosolOptics}(undef, (params.nAer)) for i=1:nBands];
 
     # τAer[iBand][iAer,iProfile]
-    τAer = [zeros(params.float_type, params.nAer, length(profile.p)) for i=1:nBands];
+    τAer = [zeros(typeof(params.τAer_ref[1]), params.nAer, length(profile.p)) for i=1:nBands];
 
     # Loop over aerosol type
     for iaer=1:params.nAer
@@ -327,6 +327,8 @@ function model_from_parameters(params::vSmartMOM_Parameters)
             @show iaer,ib
             aerosol_optics[ib][iaer] = Scattering.truncate_phase(truncation_type, aerosol_optics_raw; reportFit=false)
             # Compute nAer aerosol optical thickness profiles
+
+            @show params.p₀[iaer]
             τAer[ib][iaer,:] = params.τAer_ref[iaer] * (aerosol_optics[ib][iaer].k/k_ref) * vSmartMOM.getAerosolLayerOptProp(1.0, params.p₀[iaer], params.σp[iaer], profile.p)
             # @show τAer, sum(τAer)
             # Can be done with arbitrary length later:

@@ -118,7 +118,7 @@ end
 function getAerosolLayerOptProp(total_τ, p₀, σp, p_half)
     FT = eltype(p₀)
     Nz = length(p_half)
-    ρ = zeros(Nz)
+    ρ = zeros(FT,Nz)
     for i = 2:Nz
         dp = p_half[i] - p_half[i - 1]
         ρ[i] = (1 / (σp * sqrt(2π))) * exp(-(p_half[i] - p₀)^2 / (2σp^2)) * dp

@@ -3,7 +3,7 @@
 # `ndoubl` doubling steps
 
 function doubling_helper!(pol_type, SFI, expk, ndoubl::Int, 
-                            added_layer::AddedLayer{FT},
+                            added_layer::AddedLayer,#{FT},
                             I_static::AbstractArray{FT}, 
                             architecture) where {FT}
 
@@ -46,7 +46,7 @@ function doubling_helper!(pol_type, SFI, expk, ndoubl::Int,
     # After doubling, revert D(DR)->R, where D = Diagonal{1,1,-1,-1}
     # For SFI, after doubling, revert D(DJ₀⁻)->J₀⁻
     synchronize_if_gpu()
-    apply_D_matrix!(pol_type.n, added_layer.r⁻⁺, added_layer.t⁺⁺, added_layer.r⁺⁻, added_layer.t⁻⁻)
+    #apply_D_matrix!(pol_type.n, added_layer.r⁻⁺, added_layer.t⁺⁺, added_layer.r⁺⁻, added_layer.t⁻⁻)
     if SFI
         apply_D_matrix_SFI!(pol_type.n, added_layer.J₀⁻)
     end
@@ -56,7 +56,7 @@ end
 
 function doubling!(pol_type, SFI, expk,
                     ndoubl::Int, 
-                    added_layer::AddedLayer{FT},
+                    added_layer::AddedLayer,#{FT},
                     I_static::AbstractArray{FT}, 
                     architecture) where {FT}
 

@@ -14,6 +14,7 @@ using ...Architectures
 
 using FastGaussQuadrature 
 using CUDA
+CUDA.math_mode!(CUDA.FAST_MATH)
 using TimerOutputs
 using StatsBase
 using KernelAbstractions
