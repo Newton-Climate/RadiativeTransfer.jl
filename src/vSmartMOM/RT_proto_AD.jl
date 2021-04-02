@@ -6,6 +6,7 @@ using RadiativeTransfer
 using RadiativeTransfer.Absorption
 using RadiativeTransfer.Scattering
 using RadiativeTransfer.vSmartMOM
+using ForwardDiff 
 
 # Load parameters from file
 parameters = vSmartMOM.parameters_from_yaml("src/vSmartMOM/ModelParameters/DefaultParameters.yaml")
@@ -16,24 +17,19 @@ parameters = vSmartMOM.parameters_from_yaml("src/vSmartMOM/ModelParameters/Defau
 # parameters = vSmartMOM.default_parameters();
 function runner(x, parameters=parameters)
     parameters.τAer_ref = [x[1]];
-    @show parameters.p₀
+    #@show parameters.p₀
     parameters.p₀ = [x[2]];
     @show parameters.p₀
     model = model_from_parameters(parameters);
-    #model.params.architecture = RadiativeTransfer.Architectures.CPU()
+    
+    model.params.architecture = RadiativeTransfer.Architectures.GPU()
     J = vSmartMOM.rt_run(model);
-    @show J
+    #@show J
     return J#; R_SFI[1,1,:]
 end
-# Generates all the derived attributes from above parameters
-#model = model_from_parameters(parameters);
-#model.params.
-##model.params.architecture = RadiativeTransfer.Architectures.GPU()
-#@time R_GPU, T_GPU, R_SFI, T_SFI = vSmartMOM.rt_run(model);
-#@show R_GPU[1,1,:]
-#@show R_SFI[1,1,:]
-#plot(R_GPU[1,1,:])
-#plot!(R_SFI[1,1,:])
-#plot(R_GPU[1,1,:]./R_SFI[1,1,:])
-# curr_parameters.
+
+x = [0.1,90001.0]
+# Run FW model:
+@time runner(x);
+@time dfdx = ForwardDiff.jacobian(runner, x);
 
