@@ -213,7 +213,8 @@ function make_interpolation_model_test(
     cs_matrix[:,:,:] = full_interp(ν_grid, p_grid, t_grid);
     
     # Perform the interpolation (can add a switch whether quadratic or cubic later, ideally in the setup file)
-    itp = interpolate(cs_matrix, BSpline(Cubic(Line(OnGrid()))));
+    #itp = interpolate(cs_matrix, BSpline(Cubic(Line(OnGrid()))));
+    itp = interpolate(cs_matrix, (BSpline(Linear()),BSpline(Cubic(Line(OnGrid()))),BSpline(Cubic(Line(OnGrid())))))
     #itp = interpolate(cs_matrix, BSpline(Quadratic(Line(OnGrid()))))
     # interpolate(table, (BSpline(Constant()),BSpline(Cubic(Line(OnGrid()))),BSpline(Cubic(Line(OnGrid())))));
 
